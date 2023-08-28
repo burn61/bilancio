@@ -1,9 +1,28 @@
-import React from 'react'
+import React from "react";
+import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
+import Table from "./Table";
 
 function Home() {
   return (
-    <div>Home</div>
-  )
+    <MDBContainer fluid style={{maxWidth: '95%'}}>
+      <MDBRow>
+        <MDBCol size="md-7" className="text-center border border-primary">
+          <MDBContainer className="mt-3">
+            <Table />
+          </MDBContainer>
+        </MDBCol>
+        <MDBCol size="md-5" className="text-center border border-primary">
+          <MDBContainer className="border border.primary mt-3">
+            <div>operazioni</div>
+          </MDBContainer>
+          <MDBContainer className="border border.primary mt-3">
+            <div>operazioni</div>
+          </MDBContainer>
+        </MDBCol>
+
+      </MDBRow>
+    </MDBContainer>
+  );
 }
 
-export default Home
+export default Home;
