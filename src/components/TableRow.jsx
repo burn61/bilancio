@@ -2,8 +2,11 @@ import { MDBIcon } from 'mdb-react-ui-kit';
 import { useState } from 'react';
 
 function TableRow(props) {
-  const { id, date, descr, amount } = props;
-  const sign = +amount>0 ? '+' : '-';
+  const { id, date, descr, euro, kId } = props;
+  console.log(kId)
+  const sign = +euro>0 ? '+' : '-';
+
+  const amount = Math.abs(+euro).toLocaleString('it-IT')
 
   const [colorIconPen, setColorIconPen] = useState('text-black')
   const [colorIconTrash, setColorIconTrash] = useState('text-black')
@@ -30,11 +33,11 @@ function TableRow(props) {
 
   return (
     <tr>
-      <th scope="row">{id}</th>
+      <th scope="row">{kId}</th>
       <td>{date}</td>
       <td>{descr}</td>
       <td>{sign}</td>
-      <td>{amount}</td>
+      <td className={sign == '-' ? 'text-danger' : ''}>{amount}</td>
       <td>
         <MDBIcon 
           fas icon="pen" 
