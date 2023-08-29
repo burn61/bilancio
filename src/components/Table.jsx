@@ -15,7 +15,7 @@ function Table() {
           <th scope='col'>Descrizione</th>
           <th scope='col'>+/-</th>
           <th scope='col'>Importo</th>
-          <th scope='col'>Importo</th>
+          <th scope='col'>Azioni</th>
         </tr>
       </MDBTableHead>
       <MDBTableBody>
