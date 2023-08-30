@@ -2,15 +2,14 @@ import { MDBIcon } from 'mdb-react-ui-kit';
 import { useState } from 'react';
 
 function TableRow(props) {
-  const { id, date, descr, euro, kId } = props;
-  console.log(kId)
+  const {id, date, descr, euro, counter } = props;
   const sign = +euro>0 ? '+' : '-';
-
+  
   const amount = Math.abs(+euro).toLocaleString('it-IT')
-
+  
   const [colorIconPen, setColorIconPen] = useState('text-black')
   const [colorIconTrash, setColorIconTrash] = useState('text-black')
-
+  
   function swapColor(clr) {
     return clr == 'text-black' ? 'text-danger' : 'text-black'
   }
@@ -21,19 +20,19 @@ function TableRow(props) {
       case 'pen':
         setColorIconPen(swapColor(colorIconPen))
         break;
-      case 'trash':
-        setColorIconTrash(swapColor(colorIconTrash))
-        break;
-    }
+        case 'trash':
+          setColorIconTrash(swapColor(colorIconTrash))
+          break;
+        }
   }
-
+  
   const handleClick = (e) => {
     console.log(e);
   }
 
   return (
     <tr>
-      <th scope="row">{kId}</th>
+      <th scope="row">{counter}</th>
       <td>{date}</td>
       <td>{descr}</td>
       <td>{sign}</td>
