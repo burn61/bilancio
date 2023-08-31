@@ -1,23 +1,54 @@
-import { useContext } from "react";
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
+import { useState, useEffect } from "react";
 
-import { Context } from "./Home";
 import TableRow from "./TableRow";
 import "./Table.css";
 
-function Table() {
-  const data = useContext(Context);
+import deleteArrayItemById from "./deleteArrayItemById";
 
-  function linea(oper, i) {
-    const { id, date, descr, euro } = oper;
+function Table(props) {
+  const [data, setData] = useState(props.data);
+
+  const arrMax = (arr, key) => {
+    return Math.max(...arr.map(el => +el[key]))
+  }
+
+  const arrSum = (arr, key) => {
+    let sum = 0;
+    arr.forEach(el => {
+      sum += +el[key]
+    });
+    return sum
+  }
+
+  useEffect(()=>{
+    console.log(arrMax(data, 'euro'))
+    console.log(arrSum(data, 'euro'))
+  },[data])
+
+  function rowData(singleLine, i) {
+    const { id, date, descr, euro } = singleLine;
+
+    const handleClick = (e, id) => {
+      const button = e.target.id;
+      switch (button) {
+        case 'pen':
+          console.log('pen', id);
+          break;
+        case 'trash':
+          setData(deleteArrayItemById(data, id))
+          break;
+      }
+    }
     return (
       <TableRow
-        key={id}
+        key={i}
         id={id}
         date={date}
         descr={descr}
         euro={euro}
         counter={i + 1}
+        handleClick={handleClick}
       />
     );
   }
@@ -35,7 +66,7 @@ function Table() {
         </tr>
       </MDBTableHead>
       <MDBTableBody>
-        {data.map((singleLine, i) => linea(singleLine, i))}
+        {data.map((singleLine, i) => rowData(singleLine, i))}
       </MDBTableBody>
     </MDBTable>
   );

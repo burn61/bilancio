@@ -1,8 +1,8 @@
-import { MDBIcon } from 'mdb-react-ui-kit';
 import { useState } from 'react';
+import { MDBIcon } from 'mdb-react-ui-kit';
 
 function TableRow(props) {
-  const {id, date, descr, euro, counter } = props;
+  const {id, date, descr, euro, counter, handleClick } = props;
   const sign = +euro>0 ? '+' : '-';
   
   const amount = Math.abs(+euro).toLocaleString('it-IT')
@@ -20,16 +20,12 @@ function TableRow(props) {
       case 'pen':
         setColorIconPen(swapColor(colorIconPen))
         break;
-        case 'trash':
-          setColorIconTrash(swapColor(colorIconTrash))
-          break;
-        }
+      case 'trash':
+        setColorIconTrash(swapColor(colorIconTrash))
+        break;
+    }
   }
   
-  const handleClick = (e) => {
-    console.log(e);
-  }
-
   return (
     <tr>
       <th scope="row">{counter}</th>
@@ -44,14 +40,14 @@ function TableRow(props) {
           className={colorIconPen +' mx-2'} 
           onMouseEnter={colorizeIcon} 
           onMouseLeave={colorizeIcon}
-          onClick={handleClick}/>
+          onClick={(e)=> handleClick(e, id)}/>
         <MDBIcon 
           far icon="trash-alt" 
           id='trash' 
           className={colorIconTrash +' mx-2'} 
           onMouseEnter={colorizeIcon} 
           onMouseLeave={colorizeIcon}
-          onClick={handleClick}/>
+          onClick={(e)=> handleClick(e, id)}/>
       </td>
     </tr>
   );
