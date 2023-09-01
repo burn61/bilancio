@@ -8,23 +8,26 @@ import deleteArrayItemById from "./deleteArrayItemById";
 
 function Table(props) {
   const [data, setData] = useState(props.data);
+  const { summary } = props;
 
   const arrMax = (arr, key) => {
-    return Math.max(...arr.map(el => +el[key]))
+    const arrMx = Math.max(...arr.map(el => +el[key]));
+
   }
 
-  const arrSum = (arr, key) => {
-    let sum = 0;
-    arr.forEach(el => {
-      sum += +el[key]
-    });
-    return sum
+  const arrStat = (arr, key) => {
+    const tot = (
+      arr
+      .map(el => el[key])
+      .reduce((accumulator, current) => current+accumulator, 0)
+    )
+    const max = Math.max(...arr.map(el => +el[key]));
+    summary(tot, max);
   }
 
   useEffect(()=>{
-    console.log(arrMax(data, 'euro'))
-    console.log(arrSum(data, 'euro'))
-  },[data])
+    (data) && (arrStat(data, 'euro'))
+  }, [data]);
 
   function rowData(singleLine, i) {
     const { id, date, descr, euro } = singleLine;

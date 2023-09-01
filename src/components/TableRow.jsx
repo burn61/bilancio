@@ -40,7 +40,8 @@ function TableRow(props) {
           className={colorIconPen +' mx-2'} 
           onMouseEnter={colorizeIcon} 
           onMouseLeave={colorizeIcon}
-          onClick={(e)=> handleClick(e, id)}/>
+          onClick={(e)=> handleClick(e, id
+          )}/>
         <MDBIcon 
           far icon="trash-alt" 
           id='trash' 
