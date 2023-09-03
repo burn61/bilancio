@@ -9,11 +9,12 @@ function Form() {
   }
 
   function matchPattern(input) {
-    return /^\d*\,?\d*$/.test(input)
+    //return /^\d*\,?\d*$/.test(input)
+    return /^\d*\,?\d?\d?$/.test(input)
   }
   
   const handleAmount = (e) => {
-    let x = filterNum(e.target.value);
+    const x = filterNum(e.target.value);
     if (!matchPattern(x)) {
       e.target.value = e.target.value.slice(0, -1);
       return //e.target.value
