@@ -32,7 +32,9 @@ function TableRow(props) {
       <td>{date}</td>
       <td>{descr}</td>
       <td>{sign}</td>
-      <td className={sign == '-' ? 'text-danger' : ''}>{amount}</td>
+      <td className={sign == '-' ? 'text-danger' : ''}>
+        {amount}
+      </td>
       <td>
         <MDBIcon 
           fas icon="pen" 

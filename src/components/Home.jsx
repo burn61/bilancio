@@ -3,6 +3,9 @@ import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 import Table from "./Table";
 import Summary from "./Summary";
+import Form from "./Form";
+
+import './Home.css'
 
 import data from "./dummyData";
 
@@ -10,28 +13,34 @@ function Home() {
 
   const [somma, setSomma] = useState(0);
   const [max, setMax] = useState(0);
+  const [length, setLength] = useState(0)
 
-  const handleSummary = (tot, max)=> {
+  const handleSummary = (tot, max, length)=> {
     setSomma(tot);
     setMax(max);
+    setLength(length);
   }
 
   return (
-    <MDBContainer fluid style={{ maxWidth: "95%", maxHeight: "90%" }}>
+    <MDBContainer fluid style={{ maxWidth: "95%"}}>
       <MDBRow>
-        <MDBCol size="md-7" className="text-center border border-primary">
-          <MDBContainer className="mt-3">
+        
+        <MDBCol size="md-7" className="text-center">
+          <MDBContainer id='mouves-table' className="mt-3 border border-danger">
             <Table data={data} summary={handleSummary}/>
           </MDBContainer>
         </MDBCol>
+
         <MDBCol size="md-5" className="text-center border border-primary">
-          <MDBContainer className="border border.primary mt-3">
-            <div>operazioni</div>
+          <MDBContainer id="edit-form" className="border border.primary mt-3">
+            <Form />
           </MDBContainer>
-          <MDBContainer className="border border.primary mt-3">
-            <Summary somma={somma} max={max}/>
+        
+          <MDBContainer id='summary-window' className="border border.primary mt-3 text-start">
+            <Summary somma={somma} max={max} length={length}/>
           </MDBContainer>
         </MDBCol>
+    
       </MDBRow>
     </MDBContainer>
   );

@@ -22,11 +22,12 @@ function Table(props) {
       .reduce((accumulator, current) => current+accumulator, 0)
     )
     const max = Math.max(...arr.map(el => +el[key]));
-    summary(tot, max);
+    const length = arr.length
+    summary(tot, max, length);
   }
 
   useEffect(()=>{
-    (data) && (arrStat(data, 'euro'))
+    (data) && (arrStat(data, 'euro'));
   }, [data]);
 
   function rowData(singleLine, i) {
