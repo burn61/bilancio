@@ -1,19 +1,12 @@
 import { MDBTable, MDBTableHead, MDBTableBody } from "mdb-react-ui-kit";
 import { useState, useEffect } from "react";
-
 import TableRow from "./TableRow";
 import "./Table.css";
-
 import deleteArrayItemById from "./deleteArrayItemById";
 
 function Table(props) {
   const [data, setData] = useState(props.data);
-  const { summary } = props;
-
-  const arrMax = (arr, key) => {
-    const arrMx = Math.max(...arr.map(el => +el[key]));
-
-  }
+  const { summary, handleForm } = props; // funzioni che aggiornano il sommario e i campi del form
 
   const arrStat = (arr, key) => {
     const tot = (
@@ -26,31 +19,29 @@ function Table(props) {
     summary(tot, max, length);
   }
 
-  useEffect(()=>{
+  useEffect(()=>{ // Aggiorna il componente summary
     (data) && (arrStat(data, 'euro'));
   }, [data]);
 
-  function rowData(singleLine, i) {
-    const { id, date, descr, euro } = singleLine;
 
-    const handleClick = (e, id) => {
-      const button = e.target.id;
-      switch (button) {
-        case 'pen':
-          console.log('pen', id);
-          break;
-        case 'trash':
-          setData(deleteArrayItemById(data, id))
-          break;
-      }
+  const handleClick = (e, id) => {
+    const button = e.target.id;
+    switch (button) {
+      case 'pen':
+        handleForm(data, id);
+
+        break;
+      case 'trash':
+        setData(deleteArrayItemById(data, id))
+        break;
     }
+  }
+
+  function rowData(singleLine, i) {
     return (
       <TableRow
         key={i}
-        id={id}
-        date={date}
-        descr={descr}
-        euro={euro}
+        singleLine={singleLine}
         counter={i + 1}
         handleClick={handleClick}
       />

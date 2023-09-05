@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { MDBIcon } from 'mdb-react-ui-kit';
 
 function TableRow(props) {
-  const {id, date, descr, euro, counter, handleClick } = props;
-  const sign = +euro>0 ? '+' : '-';
+  const { singleLine:{id, date, descr, euro}, counter, handleClick } = props;
+  const sign = +euro > 0 ? '+' : '-';
   
   const amount = Math.abs(+euro).toLocaleString('it-IT')
   

@@ -1,16 +1,15 @@
 //import { useState } from "react";
 import { MDBInput, MDBRadio, MDBBtn, MDBRow, MDBCol } from "mdb-react-ui-kit";
+import objectIsEmpty from "./objectIsEmpty";
 
 function Form(props) {
 
-  const dataForm = {id: 0, date: '', descr: '', amount: '', sign: ''}
+  const {dataForm} = props;
   
-  if (props) {
-    dataForm.id = props.id;
-    dataForm.date = props.date;
-    dataForm.descr = props.descr;
-    dataForm.sign = props.euro < 0 ? '-' : '+'
-    dataForm.amount = Math.abs(+props.euro).toLocaleString('it-IT')
+  if (!objectIsEmpty(dataForm)) {
+    dataForm.sign = dataForm.euro < 0 ? '-' : '+'
+    dataForm.amount = Math.abs(+dataForm.euro).toLocaleString('it-IT')
+    console.log('dataForm=', dataForm)
   } 
 
   function filterNum(str) {
@@ -55,6 +54,8 @@ function Form(props) {
             label="Data" 
             type="date"
             defaultValue={dataForm.date} 
+            value={dataForm.date} 
+
           />
         </MDBCol>
         <MDBCol>
