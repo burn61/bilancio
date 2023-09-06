@@ -1,4 +1,4 @@
-//import { useState } from "react";
+import { useState } from "react";
 import { MDBInput, MDBRadio, MDBBtn, MDBRow, MDBCol } from "mdb-react-ui-kit";
 import objectIsEmpty from "./objectIsEmpty";
 
@@ -7,8 +7,14 @@ function Form(props) {
   const {dataForm} = props;
   
   if (!objectIsEmpty(dataForm)) {
-    dataForm.sign = dataForm.euro < 0 ? '-' : '+'
-    dataForm.amount = Math.abs(+dataForm.euro).toLocaleString('it-IT')
+    dataForm.sign = dataForm.euro < 0 ? '-' : '+';
+    dataForm.amount = Math.abs(+dataForm.euro).toLocaleString('it-IT');
+    if (!/\d{4}-\d{2}-\d{2}/.test(dataForm.date)) {
+      const day = dataForm.date.slice(0, 2)
+      const month = dataForm.date.slice(3, 5)
+      const year = dataForm.date.slice(6,10)
+      dataForm.date = `${year}-${month}-${day}`
+    }
     console.log('dataForm=', dataForm)
   } 
 
@@ -53,7 +59,6 @@ function Form(props) {
             id="date-mov" 
             label="Data" 
             type="date"
-            defaultValue={dataForm.date} 
             value={dataForm.date} 
 
           />
@@ -63,7 +68,7 @@ function Form(props) {
             id="descr"
             label="Descrizione movimento"
             type="text"
-            defaultValue={null || dataForm.descr}
+            value={dataForm.descr}
           />
         </MDBCol>
       </MDBRow>
@@ -91,7 +96,7 @@ function Form(props) {
             label="Importo"
             type="text"
             onChange={(e) => handleAmount(e)}
-            defaultValue={dataForm.euro!='' ? dataForm.euro : ''}
+            value={dataForm.euro}
           />
         </MDBCol>
       </MDBRow>
