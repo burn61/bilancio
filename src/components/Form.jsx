@@ -4,18 +4,25 @@ import objectIsEmpty from "./objectIsEmpty";
 
 function Form(props) {
 
+  const {euro} = props;
+  const [descr, setDescr] = useState(props.descr);
+  const [amount, setAmount] = useState(euro ? Math.abs(+euro).toLocaleString('it-IT') : '');
+  const [sign, setSign] = useState((euro)=>{
+    if (euro) return (+euro>0 ? '+' : '-');
+    return '' 
+  });
+  const [date, setDate] = useState('');
+
   const {dataForm} = props;
   
-  if (!objectIsEmpty(dataForm)) {
-    dataForm.sign = dataForm.euro < 0 ? '-' : '+';
-    dataForm.amount = Math.abs(+dataForm.euro).toLocaleString('it-IT');
-    if (!/\d{4}-\d{2}-\d{2}/.test(dataForm.date)) {
-      const day = dataForm.date.slice(0, 2)
-      const month = dataForm.date.slice(3, 5)
-      const year = dataForm.date.slice(6,10)
-      dataForm.date = `${year}-${month}-${day}`
+  if (descr) { // Ci sono dati per il form
+    if (!/\d{4}-\d{2}-\d{2}/.test(date)) {
+      const day = dataForm.date.slice(0, 2);
+      const month = dataForm.date.slice(3, 5);
+      const year = dataForm.date.slice(6,10);
+      setDate(`${year}-${month}-${day}`)
     }
-    console.log('dataForm=', dataForm)
+    console.log('dataForm=', descr, amount, sign, date)
   } 
 
   function filterNum(str) {
@@ -32,13 +39,13 @@ function Form(props) {
   const handleAmount = (e) => {
     const x = filterNum(e.target.value);
     if (!matchPattern(x)) {
-      e.target.value = e.target.value.slice(0, -1);
+      e.target.value = setAmount(e.target.value.slice(0, -1));
       return
     }
     if (x.includes(",")) {
       return
     }
-    e.target.value = (+x).toLocaleString("it-IT");
+    e.target.value = setAmount((+x).toLocaleString("it-IT"));
   };
 
   function localStringToNumber(stringx) {
@@ -50,6 +57,7 @@ function Form(props) {
   const handleCancel = (e) =>{
     //setDataForm(emptyForm)
   }
+  
 
   return (
     <>
@@ -59,7 +67,8 @@ function Form(props) {
             id="date-mov" 
             label="Data" 
             type="date"
-            value={dataForm.date} 
+            value={date}
+            onClick={(e)=>setDate(e.target.value)} 
 
           />
         </MDBCol>
@@ -68,7 +77,8 @@ function Form(props) {
             id="descr"
             label="Descrizione movimento"
             type="text"
-            value={dataForm.descr}
+            value={descr}
+            onClick={(e)=>setDescr(e.target.value)}
           />
         </MDBCol>
       </MDBRow>
@@ -78,15 +88,17 @@ function Form(props) {
           <MDBRadio
             name="RadioSign"
             id="Entrata"
-            defaultChecked={true ? dataForm.euro>0 : false}
+            defaultChecked={true ? sign=='+' : false}
             label="Entrata"
+            checked={(e)=>{e.target.value}}
             inline
           />
           <MDBRadio
             name="RadioSign"
             id="Spesa"
-            defaultChecked={true ? dataForm.euro<0 : false}
+            defaultChecked={true ? sign=='-' : false}
             label="Spesa"
+            checked={(e)=>{e.target.value}}
             inline
           />
         </MDBCol>
@@ -96,7 +108,7 @@ function Form(props) {
             label="Importo"
             type="text"
             onChange={(e) => handleAmount(e)}
-            value={dataForm.euro}
+            value={amount}
           />
         </MDBCol>
       </MDBRow>
