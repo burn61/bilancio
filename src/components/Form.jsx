@@ -9,10 +9,10 @@ function Form(props) {
     descr: descr,
     amount: '',
     sign: '',
-    date: ''
+    date: '',
+    id: 0
   })
   useEffect(()=>{
-    console.log('data=', date)
     if (date && !/\d{4}-\d{2}-\d{2}/.test(date)) {
       const day = date.slice(0, 2);
       const month = date.slice(3, 5);
@@ -66,7 +66,6 @@ function Form(props) {
     setDataForm({...dataForm, [e.target.name]: e.target.value})
   }
   
-
   return (
     <>
       <MDBRow>
@@ -76,7 +75,7 @@ function Form(props) {
             label="Data" 
             type="date"
             name='date'
-            value={dataForm.date}
+            value={dataForm.date || ''}
             onChange={(e)=>handleChange(e)} 
 
           />
@@ -87,7 +86,7 @@ function Form(props) {
             label="Descrizione movimento"
             type="text"
             name='descr'
-            value={dataForm.descr}
+            value={dataForm.descr || ''}
             onChange={(e)=>handleChange(e)}
           />
         </MDBCol>
@@ -98,16 +97,18 @@ function Form(props) {
           <MDBRadio
             name="sign"
             id="Entrata"
-            checked={dataForm.sign}
+            checked={dataForm.sign=='+' ? true : false}
             label="Entrata"
+            value={dataForm.sign || ''}
             onChange={(e)=>handleChange(e)}
             inline
           />
           <MDBRadio
             name="sign"
             id="Spesa"
-            checked={dataForm.sign}
+            checked={dataForm.sign=='-' ? true : false}
             label="Spesa"
+            value={dataForm.sign || ''}
             onChange={(e)=>handleChange(e)}
             inline
           />
@@ -119,7 +120,7 @@ function Form(props) {
             type="text"
             name='amount'
             onChange={(e) => handleAmount(e)}
-            value={dataForm.amount}
+            value={dataForm.amount || ''}
           />
         </MDBCol>
       </MDBRow>
