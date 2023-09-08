@@ -20,7 +20,6 @@ function Home() {
   }
 
   const handleForm = (arr, id) => {
-    console.log('arr=', arr)
     const index = arr.findIndex((el)=>el.id == id );
     setDataForm(arr[index]);
   }
