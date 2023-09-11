@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, createContext } from "react";
 import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
 import Table from "./Table";
 import Summary from "./Summary";
 import Form from "./Form";
 import './Home.css'
 import data from "./dummyData";
+
+export const contextData = createContext();
 
 function Home() {
 
@@ -23,28 +25,31 @@ function Home() {
     const index = arr.findIndex((el)=>el.id == id );
     setDataForm(arr[index]);
   }
+  
   return (
-    <MDBContainer fluid style={{ maxWidth: "95%"}}>
-      <MDBRow>
-        
-        <MDBCol size="md-7" className="text-center">
-          <MDBContainer id='mouves-table' className="mt-3 border border-danger">
-            <Table data={data} summary={handleSummary} handleForm={handleForm}/>
-          </MDBContainer>
-        </MDBCol>
+    <contextData.Provider value={data}>
+      <MDBContainer fluid style={{ maxWidth: "95%"}}>
+        <MDBRow>
+          
+          <MDBCol size="md-7" className="text-center">
+            <MDBContainer id='mouves-table' className="mt-3 border border-danger">
+              <Table data={data} summary={handleSummary} handleForm={handleForm}/>
+            </MDBContainer>
+          </MDBCol>
 
-        <MDBCol size="md-5" className="text-center border border-primary">
-          <MDBContainer id="edit-form" className="border border.primary mt-3">
-            <Form dataForm={dataForm}/>
-          </MDBContainer>
-        
-          <MDBContainer id='summary-window' className="border border.primary mt-3 text-start">
-            <Summary somma={somma} max={max} length={length}/>
-          </MDBContainer>
-        </MDBCol>
-    
-      </MDBRow>
-    </MDBContainer>
+          <MDBCol size="md-5" className="text-center border border-primary">
+            <MDBContainer id="edit-form" className="border border.primary mt-3">
+              <Form dataForm={dataForm}/>
+            </MDBContainer>
+          
+            <MDBContainer id='summary-window' className="border border.primary mt-3 text-start">
+              <Summary somma={somma} max={max} length={length}/>
+            </MDBContainer>
+          </MDBCol>
+      
+        </MDBRow>
+      </MDBContainer>
+    </contextData.Provider>
   );
 }
 

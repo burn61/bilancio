@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { MDBInput, MDBRadio, MDBBtn, MDBRow, MDBCol } from "mdb-react-ui-kit";
 import objectIsEmpty from "./objectIsEmpty";
 
+import { contextData } from "./Home";
+
 function Form(props) {
-  
+
+  const data = useContext(contextData);
+
   const {dataForm:{descr, euro, date, id}} = props;
   const [dataForm, setDataForm] = useState({
     descr: descr,
@@ -12,11 +16,10 @@ function Form(props) {
     date: '',
     id: 0
   })
+
   useEffect(()=>{
     if (date && !/\d{4}-\d{2}-\d{2}/.test(date)) {
-      const day = date.slice(0, 2);
-      const month = date.slice(3, 5);
-      const year = date.slice(6,10);
+      const [day, month, year] = date.split('-');
       setDataForm(
         {
           descr: descr,
@@ -25,13 +28,13 @@ function Form(props) {
           date: `${year}-${month}-${day}`
         }
       )
-      }
+    }
   }, [descr])
 
   function filterNum(str) {
     const re =
       /\$|@|#|~|`|\%|\*|\^|\&|\(|\)|\+|\=|\[|\-|\_|\]|\[|\}|\{|\;|\:|\'|\"|\<|\>|\?|\||\\|\!|\$|\./g;
-    // rimuove caratteri speciali come "$" e "," etc...
+    // rimuove caratteri speciali come "$" e "." etc... tranne ,
     return str.replace(re, "")
   }
 
@@ -41,15 +44,15 @@ function Form(props) {
   
   const handleAmount = (e) => {
     const x = filterNum(e.target.value);
+    const field = e.target.name;
     if (!matchPattern(x)) {
-      e.target.value = setDataForm({...dataForm, [e.target.name]: e.target.value.slice(0, -1)});
+      e.target.value = setDataForm({...dataForm, [field]: e.target.value.slice(0, -1)});
       return
     }
     if (x.includes(",")) {
-      setDataForm({...dataForm, [e.target.name]: e.target.value})
-      return
-    }
-    e.target.value = setDataForm({...dataForm, [e.target.name]: (+x).toLocaleString("it-IT")});
+      setDataForm({...dataForm, [field]: e.target.value})
+      
+    } else {e.target.value = setDataForm({...dataForm, [field]: (+x).toLocaleString("it-IT")})}
   };
 
   function localStringToNumber(stringx) {
@@ -59,11 +62,34 @@ function Form(props) {
   }
 
   const handleCancel = (e) =>{
-    // qui funzione per svuotare il form
+    setDataForm({
+      descr: '',
+      amount: '',
+      sign: '',
+      date: '',
+      id: 0
+    })
   }
 
   const handleChange = (e) => {
     setDataForm({...dataForm, [e.target.name]: e.target.value})
+  }
+
+  const handleEnter = (e) =>{
+    console.log(e);
+    if (!dataForm.id) {
+      const arr = ['descr', 'amount', 'sign', 'date']
+      console.log(emptyData(dataForm, arr))
+      //dataForm.id = Math.max(...data.map(el=>el.id))+1;
+    }
+  }
+
+  const handleChangeSign = (e) => {
+    if (e.target.value == '+') {
+      setDataForm({...dataForm, sign: '-'})
+    } else if (e.target.value == '-') {
+      setDataForm({...dataForm, sign: '+'})
+    }
   }
   
   return (
@@ -100,7 +126,7 @@ function Form(props) {
             checked={dataForm.sign=='+' ? true : false}
             label="Entrata"
             value={dataForm.sign || ''}
-            onChange={(e)=>handleChange(e)}
+            onChange={(e)=>handleChangeSign(e)}
             inline
           />
           <MDBRadio
@@ -109,7 +135,7 @@ function Form(props) {
             checked={dataForm.sign=='-' ? true : false}
             label="Spesa"
             value={dataForm.sign || ''}
-            onChange={(e)=>handleChange(e)}
+            onChange={(e)=>handleChangeSign(e)}
             inline
           />
         </MDBCol>
@@ -131,7 +157,7 @@ function Form(props) {
           </MDBBtn>
         </p>
         <p className="w-auto p-3">
-          <MDBBtn rounded className="mx-2" color="secondary" size='sm' onClick={(e)=>console.log("Cliccato")}>
+          <MDBBtn rounded className="mx-2" color="secondary" size='sm' onClick={(e)=>handleEnter(e)}>
             Invio
           </MDBBtn>
         </p>
