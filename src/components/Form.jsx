@@ -1,23 +1,22 @@
 import { useState, useEffect, useContext } from "react";
 import { MDBInput, MDBRadio, MDBBtn, MDBRow, MDBCol } from "mdb-react-ui-kit";
-import objectIsEmpty from "./objectIsEmpty";
 
+import isEmpty from "./isEmpty";
 import { contextData } from "./Home";
+import BoxError from './BoxError';
+import './Form.css'
 
 function Form(props) {
 
   const data = useContext(contextData);
 
   const {dataForm:{descr, euro, date, id}} = props;
-  const [dataForm, setDataForm] = useState({
-    descr: descr,
-    amount: '',
-    sign: '',
-    date: '',
-    id: 0
-  })
+  const [dataForm, setDataForm] = useState({});
 
-  useEffect(()=>{
+  const classInputError = 'not-valid';
+  const [errorData, setErrorData] = useState({});
+
+  useEffect(()=>{ // è stato richiesto l'edit id un movimento
     if (date && !/\d{4}-\d{2}-\d{2}/.test(date)) {
       const [day, month, year] = date.split('-');
       setDataForm(
@@ -30,6 +29,7 @@ function Form(props) {
       )
     }
   }, [descr])
+
 
   function filterNum(str) {
     const re =
@@ -61,27 +61,42 @@ function Form(props) {
     console.log(stringx)
   }
 
-  const handleCancel = (e) =>{
+  const handleChange = (e) => {
+    console.log(e)
+    setDataForm({...dataForm, [e.target.name]: e.target.value})
+    // dopo change resetta l'errore
+
+    setErrorData({...errorData, [e.target.name]:''} )
+  }
+
+  const handleOnBlurDate = (e) => {
+    if (!/\d{4}[-\d\d]{2}/.test(dataForm.date)) {
+      setDataForm({...dataForm, date: null})
+      setErrorData({...errorData, date: "Data errata"} )
+    }
+  }
+
+  const handleReset = (e) =>{
     setDataForm({
       descr: '',
       amount: '',
       sign: '',
       date: '',
       id: 0
+    });
+
+    setErrorData({
+      dateMov: ''
     })
   }
 
-  const handleChange = (e) => {
-    setDataForm({...dataForm, [e.target.name]: e.target.value})
+  const handleSubmit = (event) =>{
+    console.log('check=',event.target.checkValidity());
+    if (!event.target.checkValidity()) {
+      event.target.reportValidity();
+      console.log(event.target.className += " was-validated");
+      event.preventDefault();
   }
-
-  const handleEnter = (e) =>{
-    console.log(e);
-    if (!dataForm.id) {
-      const arr = ['descr', 'amount', 'sign', 'date']
-      console.log(emptyData(dataForm, arr))
-      //dataForm.id = Math.max(...data.map(el=>el.id))+1;
-    }
   }
 
   const handleChangeSign = (e) => {
@@ -91,34 +106,40 @@ function Form(props) {
       setDataForm({...dataForm, sign: '+'})
     }
   }
-  
+
   return (
     <>
-      <MDBRow>
+    
+      <MDBRow className="pt-3">
         <MDBCol>
-          <MDBInput 
-            id="date-mov" 
-            label="Data" 
-            type="date"
-            name='date'
-            value={dataForm.date || ''}
-            onChange={(e)=>handleChange(e)} 
+            <MDBInput 
+              className={isEmpty(errorData.date) ? '' : classInputError}
+              id="date-mov" 
+              label="Data" 
+              type="date"
+              name='date'
+              value={dataForm.date || ''}
+              onChange={(e)=>handleChange(e)}
+              onBlur={e => handleOnBlurDate(e)}
+            />
+          <BoxError msg={errorData.date}/>
 
-          />
         </MDBCol>
         <MDBCol>
           <MDBInput
+            className=''
             id="descr"
             label="Descrizione movimento"
             type="text"
             name='descr'
             value={dataForm.descr || ''}
             onChange={(e)=>handleChange(e)}
+            required
           />
         </MDBCol>
       </MDBRow>
 
-      <MDBRow>
+      <MDBRow className="pt-3">
         <MDBCol>
           <MDBRadio
             name="sign"
@@ -152,12 +173,12 @@ function Form(props) {
       </MDBRow>
       <MDBRow className='justify-content-end mx-2'>
         <p className="w-auto p-3">
-          <MDBBtn rounded className="mx-2" color="secondary" size='sm' onClick={(e)=>handleCancel(e)}>
-            Annulla
+          <MDBBtn type="reset" rounded className="mx-2" color="secondary" size='sm' onClick={(e)=>handleReset(e)}>
+            Reset
           </MDBBtn>
         </p>
         <p className="w-auto p-3">
-          <MDBBtn rounded className="mx-2" color="secondary" size='sm' onClick={(e)=>handleEnter(e)}>
+          <MDBBtn type="submit" rounded className="mx-2" color="secondary" size='sm' onClick={(e)=>handleSubmit(e)}>
             Invio
           </MDBBtn>
         </p>

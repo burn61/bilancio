@@ -1,0 +1,8 @@
+/* testo e label input rossi */
+.not-valid { 
+    color: red;
+}
+
+.not-valid~label {color: red !important;}
+/* Fine */
+

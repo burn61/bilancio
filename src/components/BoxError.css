@@ -1,0 +1,14 @@
+
+/* feedback errore input */
+.error {
+    border-bottom: 0.15rem solid rgb(243, 8, 66) !important;
+    color: red;
+    padding-left: 0.5rem;
+    font-size: 70%;
+    text-align: left;
+}
+
+.no-error {
+    display: none;
+}
+/* Fine */
