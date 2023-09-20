@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import { MDBInput, MDBRadio, MDBBtn, MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 import isEmpty from "./isEmpty";
-import formatToLocalString from "./formatToLocalString";
 import { contextData } from "./Home";
 import BoxError from './BoxError';
 import './Form.css'
@@ -50,8 +49,10 @@ function Form(props) {
     let newValue = '';
     debugger;
     switch (true) {
+      // del|arrow key
       case lastKey === null:
-        newValue = (+x).toLocaleString("it-IT");
+        const y = x.replace(",", ".");
+        newValue = (+y).toLocaleString("it-IT");
         break      
       // carattere non valido
       case (!/^[0-9\,]/g.test(lastKey)):
