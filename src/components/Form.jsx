@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { MDBInput, MDBRadio, MDBBtn, MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 import isEmpty from "./isEmpty";
+import formatToLocalString from "./formatToLocalString";
 import { contextData } from "./Home";
 import BoxError from './BoxError';
 import './Form.css'
@@ -16,7 +17,9 @@ function Form(props) {
   const classInputError = 'not-valid';
   const [errorData, setErrorData] = useState({});
 
-  useEffect(()=>{ // è stato richiesto l'edit id un movimento
+  const [previousValue, setPreviousValue] = useState('');
+
+  useEffect(()=>{ // è stato richiesto l'edit di un movimento
     if (date && !/\d{4}-\d{2}-\d{2}/.test(date)) {
       const [day, month, year] = date.split('-');
       setDataForm(
@@ -26,46 +29,63 @@ function Form(props) {
           sign: +euro > 0 ? '+' : '-',
           date: `${year}-${month}-${day}`
         }
-      )
+      );
     }
-  }, [descr])
+  }, [id])
 
+  useEffect(()=>{
+    setPreviousValue(dataForm.amount)
+  }, [dataForm.amount])
 
   function filterNum(str) {
-    const re =
-      /\$|@|#|~|`|\%|\*|\^|\&|\(|\)|\+|\=|\[|\-|\_|\]|\[|\}|\{|\;|\:|\'|\"|\<|\>|\?|\||\\|\!|\$|\./g;
-    // rimuove caratteri speciali come "$" e "." etc... tranne ,
+    const re = /[^0-9^,]*/g;
     return str.replace(re, "")
   }
 
-  function matchPattern(input) {
-    return /^\d*\,?\d?\d?$/.test(input)
-  }
-  
   const handleAmount = (e) => {
-    const x = filterNum(e.target.value);
+    const value = e.target.value;
+    const lastKey = e.nativeEvent.data;
+    const x = filterNum(value);
     const field = e.target.name;
-    if (!matchPattern(x)) {
-      e.target.value = setDataForm({...dataForm, [field]: e.target.value.slice(0, -1)});
-      return
+    let newValue = '';
+    debugger;
+    switch (true) {
+      case lastKey === null:
+        newValue = (+x).toLocaleString("it-IT");
+        break      
+      // carattere non valido
+      case (!/^[0-9\,]/g.test(lastKey)):
+        newValue = previousValue;
+        break;
+      // digitata ,
+      case lastKey==',':
+        if (((value).match(/\,/g) || []).length>1){
+          newValue = previousValue;
+          setPreviousValue(newValue)
+        } else {
+          newValue = value
+          setPreviousValue(newValue)
+        }
+        break;
+      // 1-2 numeri dopo la virgola coincidenti con pattern currency
+      case (/^(0|[1-9][0-9]{0,2})(\.\d{3})*(\,\d{1,2})?$/g.test(value)):
+        newValue = value;
+        setPreviousValue(newValue)
+        break
+      // 3 numeri dopo la virgola
+      case (/,\d{3}/g.test(value)):
+        newValue = previousValue;
+        setPreviousValue(newValue);
+        break
+      default:
+        newValue = (+x).toLocaleString("it-IT")
     }
-    if (x.includes(",")) {
-      setDataForm({...dataForm, [field]: e.target.value})
-      
-    } else {e.target.value = setDataForm({...dataForm, [field]: (+x).toLocaleString("it-IT")})}
+    setDataForm({...dataForm, [field]: newValue});
+    e.target.value = newValue;
   };
 
-  function localStringToNumber(stringx) {
-    stringx = stringx.replace(/\./g, "");
-    stringx = stringx.replace(/\,/g, ".");
-    console.log(stringx)
-  }
-
   const handleChange = (e) => {
-    console.log(e)
     setDataForm({...dataForm, [e.target.name]: e.target.value})
-    // dopo change resetta l'errore
-
     setErrorData({...errorData, [e.target.name]:''} )
   }
 
