@@ -44,15 +44,13 @@ function Form(props) {
   const handleAmount = (e) => {
     const value = e.target.value;
     const lastKey = e.nativeEvent.data;
-    const x = filterNum(value);
+    const x = filterNum(value).replace(",", ".");
     const field = e.target.name;
     let newValue = '';
-    debugger;
     switch (true) {
       // del|arrow key
       case lastKey === null:
-        const y = x.replace(",", ".");
-        newValue = (+y).toLocaleString("it-IT");
+        newValue = (+x).toLocaleString("it-IT");
         break      
       // carattere non valido
       case (!/^[0-9\,]/g.test(lastKey)):
@@ -125,9 +123,16 @@ function Form(props) {
       setDataForm({...dataForm, sign: '-'})
     } else if (e.target.value == '-') {
       setDataForm({...dataForm, sign: '+'})
+    } else {
+      const idRadio = e.target.id;
+      if (idRadio == 'Spesa') { 
+        setDataForm({...dataForm, sign: '-'})
+      } else {
+        setDataForm({...dataForm, sign: '+'})
+      }
     }
   }
-
+  console.log('rendering...');
   return (
     <>
     
